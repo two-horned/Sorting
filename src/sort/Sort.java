@@ -1,7 +1,7 @@
 package sort;
 
 public abstract class Sort<T extends Comparable<T>> {
-	public abstract void sort(final T[] input);
+	public abstract void sort(T[] input);
 	
 	public final boolean isSorted(final T[] input) {
 		if (input == null)
@@ -13,7 +13,7 @@ public abstract class Sort<T extends Comparable<T>> {
 		return true;
 	}
 	
-	protected static final void swap(Object[] input, int a, int b) {
+	protected static final void swap(final Object[] input, final int a, final int b) {
 		Object temp = input[a];
 		input[a] = input[b];
 		input[b] = temp;
