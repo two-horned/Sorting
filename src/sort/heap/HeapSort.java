@@ -2,6 +2,10 @@ package sort.heap;
 
 import sort.Sort;
 
+/*
+ * Heap sort is a stable sorting algorithm
+ * that has always the time complexity of O(n log n).
+ */
 public final class HeapSort<T extends Comparable<T>> extends Sort<T> {
 	private void heapify(final T[] input, final int i, final int e) {
 		int l = i * 2 + 1;
@@ -24,8 +28,6 @@ public final class HeapSort<T extends Comparable<T>> extends Sort<T> {
 	}
 	
 	private void build(final T[] input) {
-		if(input.length < 2)
-			return;
 		int i = input.length / 2 - 1;
 		while(-1 < i)
 			heapify(input, i--);

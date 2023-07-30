@@ -15,8 +15,7 @@ public final class ShakerSort<T extends Comparable<T>> extends Sort<T> {
 		
 		boolean flag;
 		int i;
-		int j=0;
-		while(j<input.length / 2) {
+		for(int j =0;j<input.length / 2;j++) {
 			flag = true;
 			i=j;
 			while(i<input.length-j-1) {
@@ -36,9 +35,7 @@ public final class ShakerSort<T extends Comparable<T>> extends Sort<T> {
 				}
 			
 			if (flag)
-				return;
-			
-			j++;
+				return;			
 		}
 	}
 }

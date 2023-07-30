@@ -14,7 +14,7 @@ public abstract class Sort<T extends Comparable<T>> {
 	}
 	
 	protected static final void swap(final Object[] input, final int a, final int b) {
-		Object temp = input[a];
+		final Object temp = input[a];
 		input[a] = input[b];
 		input[b] = temp;
 	}
