@@ -16,6 +16,26 @@ public final class QuickSort<T extends Comparable<T>> extends Sort<T> {
 			return;
 		}
 		
+		// Necessarry because of high chance of stack overflow.
+		final int center = (right+left) / 2;
+		final T lp = input[left];
+		final T rp = input[right];
+		final T cp = input[center];
+		if(rp.compareTo(cp) < 0) {
+			if(rp.compareTo(lp) < 0) {
+				if(lp.compareTo(cp) < 0)
+					swap(input, right, left);
+				else
+					swap(input, right, center);
+			}
+		} else if (lp.compareTo(rp) < 0) {
+			if(lp.compareTo(cp) < 0)
+				swap(input, right, center);
+			else
+				swap(input, right, left);
+		}
+		
+		// Partitioning.
 		final T pivot = input[right];
 		int r = right+1;
 		int l = left;
@@ -29,12 +49,12 @@ public final class QuickSort<T extends Comparable<T>> extends Sort<T> {
 				swap(input, l, r);
 		}
 		
-		if(input[r].compareTo(pivot) > 0)
+		if(pivot.compareTo(input[r]) < 0)
 			r--;
 		
 		swap(input, right, r);
-		sort(input, right, r);
-		sort(input, l, left);
+		sort(input, right, r-1);
+		sort(input, r, left);
 	}
 	
 	@Override
