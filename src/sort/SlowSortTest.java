@@ -58,6 +58,19 @@ final class SlowSortTest {
 	}
 	
 	@Test
+	void testGnomeSort() {
+		final GnomeSort<Integer> s = new GnomeSort<>();
+		final Integer[] input1 = SlowSortTest.input1.clone();
+		final Integer[] input2 = SlowSortTest.input2.clone();
+		s.sort(input1);
+		assertEquals(true, s.isSorted(input1));
+		s.sort(input2);
+		assertEquals(true, s.isSorted(input2));
+		s.sort(sorted);
+		assertEquals(true, s.isSorted(sorted));
+	}
+	
+	@Test
 	void testBubbleSort() {
 		final BubbleSort<Integer> s = new BubbleSort<>();
 		final Integer[] input1 = SlowSortTest.input1.clone();
