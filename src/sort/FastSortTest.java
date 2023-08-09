@@ -7,10 +7,11 @@ import sort.heap.*;
 import sort.merge.*;
 import sort.quick.*;
 
+import java.util.Arrays;
 import java.util.Random;
 
 final class FastSortTest {
-	private static final int TEST_SIZE = 3200000;
+	private static final int TEST_SIZE = 10_000_000;
 	private static final Integer[] input1 = newInput(TEST_SIZE);
 	private static final Integer[] input2 = newInput(TEST_SIZE);
 	private static final Integer[] sorted = getSorted(input1);
@@ -67,7 +68,7 @@ final class FastSortTest {
 		s.sort(sorted);
 		assertEquals(true, s.isSorted(sorted));
 	}
-	
+
 	@Test
 	void testMergeSort() {
 		final MergeSort<Integer> s = new MergeSort<>();
@@ -79,6 +80,15 @@ final class FastSortTest {
 		assertEquals(true, s.isSorted(input2));
 		s.sort(sorted);
 		assertEquals(true, s.isSorted(sorted));
+	}
+
+	@Test
+	void testJavaSort() {
+		final Integer[] input1 = FastSortTest.input1.clone();
+		final Integer[] input2 = FastSortTest.input2.clone();
+		Arrays.sort(input1);
+		Arrays.sort(input2);
+		Arrays.sort(sorted);
 	}
 	
 	@Test
