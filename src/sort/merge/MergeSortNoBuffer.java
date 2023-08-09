@@ -18,7 +18,7 @@ public final class MergeSortNoBuffer<T extends Comparable<T>> extends Sort<T> {
 		int r = right;
 		int c = (right+left) / 2 + 1;
 		int i;
-		while(r<c & c<=left) {
+		while(r<c && c<=left) {
 			if(input[c].compareTo(input[r]) < 0) {
 				current = input[c];
 				i = c++;
