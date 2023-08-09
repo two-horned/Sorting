@@ -1,67 +1,53 @@
 package sort.quick;
 
 import sort.Sort;
+import java.util.Random;
 
 /*
  * QuickSort is an unstable sorting algorithm.
  * It's time complexity is O(n log n) on average and in best case and O(n^2) in the worst case.
  */
 
-public final class QuickSort<T extends Comparable<T>> extends Sort<T> {
-
+public final class QuickSort<T extends Comparable<T>> extends Sort<T> {	
+	private Random random;
+	
 	private void sort(final T[] input, final int right, final int left) {
-		if (left-right < 2) {
+		final int size = left - right + 1;
+		if(size < 2) {
+			return;
+		}
+		if (size < 3) {
 			if (input[left].compareTo(input[right]) < 0)
 				swap(input, right, left);
 			return;
 		}
 		
-		// Necessarry because of high chance of stack overflow.
-		final int center = (right+left) / 2;
-		final T lp = input[left];
-		final T rp = input[right];
-		final T cp = input[center];
-		if(rp.compareTo(cp) < 0) {
-			if(rp.compareTo(lp) < 0) {
-				if(lp.compareTo(cp) < 0)
-					swap(input, right, left);
-				else
-					swap(input, right, center);
-			}
-		} else if (lp.compareTo(rp) < 0) {
-			if(lp.compareTo(cp) < 0)
-				swap(input, right, center);
-			else
-				swap(input, right, left);
-		}
+		
+		// Choose random pivot.
+		swap(input, right, random.nextInt(size) + right);
 		
 		// Partitioning.
 		final T pivot = input[right];
 		int r = right+1;
 		int l = left;
-		
-		while(r<l) {
+		while(r < l + 1) {
 			if (input[r].compareTo(pivot) <= 0)
 				r++;
 			else if (input[l].compareTo(pivot) > 0)
 				l--;
 			else
-				swap(input, l, r);
+				swap(input, r++, l);
 		}
-		
-		if(pivot.compareTo(input[r]) < 0)
-			r--;
-		
-		swap(input, right, r);
-		sort(input, right, r-1);
+		swap(input, right, l);
+		sort(input, right, l-1);
 		sort(input, r, left);
 	}
 	
 	@Override
 	public void sort(final T[] input) {
-		if (input == null || input.length < 2)
+		if (input == null)
 			return;
-		
+		random = new Random();
 		sort(input, 0, input.length -1);
 	}
 }
