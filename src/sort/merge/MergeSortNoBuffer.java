@@ -28,7 +28,6 @@ public final class MergeSortNoBuffer<T extends Comparable<T>> extends Sort<T> {
 			} else
 				r++;
 		}
-
 	}
 	
 	private void sort(
@@ -53,7 +52,7 @@ public final class MergeSortNoBuffer<T extends Comparable<T>> extends Sort<T> {
 	
 	@Override
 	public void sort(final T[] input) {
-		if(input == null || input.length < 2)
+		if(input == null)
 			return;
 		
 		sort(input, 0, input.length-1);

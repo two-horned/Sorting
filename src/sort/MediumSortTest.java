@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 final class MediumSortTest {
-	private static final int TEST_SIZE = 100_000;
+	private static final int TEST_SIZE = 1_000_000;
 	private static final Integer[] input1 = newInput(TEST_SIZE);
 	private static final Integer[] input2 = newInput(TEST_SIZE);
 	private static final Integer[] sorted = getSorted(input1);

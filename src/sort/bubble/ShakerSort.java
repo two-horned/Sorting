@@ -10,7 +10,7 @@ import sort.Sort;
 public final class ShakerSort<T extends Comparable<T>> extends Sort<T> {
 	@Override
 	public void sort(final T[] input) {
-		if(input==null|| input.length < 2)
+		if(input==null)
 			return;
 		
 		boolean flag;

@@ -7,25 +7,25 @@ import sort.Sort;
  * It's time complexity is O(n log n).
  */
 
+@SuppressWarnings("unchecked")
 public final class SharedBufferMergeSort<T extends Comparable<T>> extends Sort<T> {
 	private Object[] buffer;
 	
-	@SuppressWarnings("unchecked")
 	private void merge(
 			final T[] input,
 			final int right,
 			final int left
 			) {
-		final int size = left - right + 1;
 		final int center = (right + left) / 2;
 		int r = right;
 		int l = center + 1;
 		int i = right;
-		while(i<size) {
+		while(i<left+1) {
 			if(input[l].compareTo(input[r]) < 0)
-				buffer[i++] = input[l++];
+				buffer[i] = input[l++];
 			else
-				buffer[i++] = input[r++];
+				buffer[i] = input[r++];
+			i++;
 			
 			if(left<l) {
 				while(r<=center)
@@ -38,10 +38,9 @@ public final class SharedBufferMergeSort<T extends Comparable<T>> extends Sort<T
 				break;
 			}
 		}
-		
-		i = 0;
-		while(i<size)
-			input[right+i] = (T) buffer[i++];
+		i = right;
+		while(i<left+1)
+			input[i] = (T) buffer[i++];
 	}
 	
 	private void sort(
@@ -51,12 +50,11 @@ public final class SharedBufferMergeSort<T extends Comparable<T>> extends Sort<T
 			) {
 		final int center = (right + left) / 2;
 		
-		if(center==right) {
+		if(center==left) {
 			if(input[left].compareTo(input[right]) < 0)
 				swap(input, left, right);
 			return;
 		}
-		
 		sort(input, right, center);
 		sort(input, center+1, left);
 		merge(input, right, left);
@@ -64,7 +62,7 @@ public final class SharedBufferMergeSort<T extends Comparable<T>> extends Sort<T
 	
 	@Override
 	public void sort(final T[] input) {
-		if(input == null || input.length < 2)
+		if(input == null)
 			return;
 		buffer = new Object[input.length];
 		sort(input, 0, input.length-1);

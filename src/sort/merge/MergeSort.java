@@ -21,9 +21,10 @@ public final class MergeSort<T extends Comparable<T>> extends Sort<T> {
 		int i = 0;
 		while(i<buffer.length) {
 			if(input[l].compareTo(input[r]) < 0)
-				buffer[i++] = input[l++];
+				buffer[i] = input[l++];
 			else
-				buffer[i++] = input[r++];
+				buffer[i] = input[r++];
+			i++;
 			
 			if(left<l) {
 				while(r<=center)
@@ -49,7 +50,7 @@ public final class MergeSort<T extends Comparable<T>> extends Sort<T> {
 			) {
 		final int center = (right + left) / 2;
 		
-		if(center==right) {
+		if(center==left) {
 			if(input[left].compareTo(input[right]) < 0)
 				swap(input, left, right);
 			return;
@@ -62,7 +63,7 @@ public final class MergeSort<T extends Comparable<T>> extends Sort<T> {
 	
 	@Override
 	public void sort(final T[] input) {
-		if(input == null || input.length < 2)
+		if(input == null)
 			return;
 		
 		sort(input, 0, input.length-1);

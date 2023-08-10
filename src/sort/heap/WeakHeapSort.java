@@ -33,7 +33,7 @@ public final class WeakHeapSort<T extends Comparable<T>> extends Sort<T> {
 	
 	@Override
 	public void sort(final T[] input) {
-		if(input == null || input.length < 2)
+		if(input == null)
 			return;
 		build(input);
 		int e = input.length - 1;
