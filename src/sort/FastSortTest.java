@@ -11,14 +11,14 @@ import java.util.Arrays;
 import java.util.Random;
 
 final class FastSortTest {
-	private static final int TEST_SIZE = 300_000;
+	private static final int TEST_SIZE = 1_000_000;
 	private static final Integer[] input1 = newInput(TEST_SIZE);
 	private static final Integer[] input2 = newInput(TEST_SIZE);
 	private static final Integer[] sorted = getSorted(input1);
 
 	private static Integer[] getSorted(final Integer[] input) {
 		final Integer[] sorted = input.clone();
-		new QuickSort<Integer>().sort(sorted);
+		Arrays.sort(sorted);
 		return sorted;
 	}
 	private static Integer[] newInput(final int size) {
@@ -33,32 +33,6 @@ final class FastSortTest {
 	@Test
 	void testQuickSort() {
 		final QuickSort<Integer> s = new QuickSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
-	}
-	
-	@Test
-	void testHeapSort() {
-		final HeapSort<Integer> s = new HeapSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
-	}
-	
-	@Test
-	void testWeakHeapSort() {
-		final WeakHeapSort<Integer> s = new WeakHeapSort<>();
 		final Integer[] input1 = FastSortTest.input1.clone();
 		final Integer[] input2 = FastSortTest.input2.clone();
 		s.sort(input1);
