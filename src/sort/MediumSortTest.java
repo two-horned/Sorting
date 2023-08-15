@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import sort.heap.*;
+import sort.merge.*;
 
 import java.util.Arrays;
 import java.util.Random;
 
 final class MediumSortTest {
-	private static final int TEST_SIZE = 1_000_000;
+	private static final int TEST_SIZE = 5_000_000;
 	private static final Integer[] input1 = newInput(TEST_SIZE);
 	private static final Integer[] input2 = newInput(TEST_SIZE);
 	private static final Integer[] sorted = getSorted(input1);
@@ -26,6 +27,32 @@ final class MediumSortTest {
 			r[i] = rand.nextInt(2*size);
 		}
 		return r;
+	}
+	
+	@Test
+	void testSharedBufferMergeSort() {
+		final SharedBufferMergeSort<Integer> s = new SharedBufferMergeSort<>();
+		final Integer[] input1 = MediumSortTest.input1.clone();
+		final Integer[] input2 = MediumSortTest.input2.clone();
+		s.sort(input1);
+		assertEquals(true, s.isSorted(input1));
+		s.sort(input2);
+		assertEquals(true, s.isSorted(input2));
+		s.sort(sorted);
+		assertEquals(true, s.isSorted(sorted));
+	}
+	
+	@Test
+	void testMergeSort() {
+		final MergeSort<Integer> s = new MergeSort<>();
+		final Integer[] input1 = MediumSortTest.input1.clone();
+		final Integer[] input2 = MediumSortTest.input2.clone();
+		s.sort(input1);
+		assertEquals(true, s.isSorted(input1));
+		s.sort(input2);
+		assertEquals(true, s.isSorted(input2));
+		s.sort(sorted);
+		assertEquals(true, s.isSorted(sorted));
 	}
 	
 	@Test

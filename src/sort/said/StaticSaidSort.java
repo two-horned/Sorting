@@ -8,10 +8,13 @@ import sort.Sort;
  * This stable sorting algorithm has been developed by myself.
  * It's ultra fast and runs in O(n log n) time and O(n) best time
  * and with a much smaller amount of needed swaps compared to all other known 
- * non-hybrid sorting algorithms with similar amount of time.
+ * non-hybrid stable sorting algorithms.
+ * 
+ * When compared to quicksort the performance is slightly worse for
+ * true randomized data and better when it's already slightly ordered.
  */
 
-public final class SaidSort<T extends Comparable<T>> extends Sort<T> {
+public final class StaticSaidSort<T extends Comparable<T>> extends Sort<T> {
 	@SuppressWarnings("rawtypes")
 	private Comparable[] buffer1;
 	@SuppressWarnings("rawtypes")
@@ -19,7 +22,7 @@ public final class SaidSort<T extends Comparable<T>> extends Sort<T> {
 	boolean flag;
 	
 	@SuppressWarnings("unchecked")
-	private void merge(
+	private final void merge(
 			final int left,
 			final int center,
 			final int right
@@ -49,18 +52,28 @@ public final class SaidSort<T extends Comparable<T>> extends Sort<T> {
 		}
 	}
 	
-	private void swapBuffers() {
+	private final void swapBuffers() {
 		@SuppressWarnings("rawtypes")
 		Comparable[] temp = buffer1;
 		buffer1 = buffer2;
 		buffer2 = temp;
 	}
 	
-	private void sort() {
+	@SuppressWarnings("unchecked")
+	private final void prepare() {
+		for(int i=1; i<buffer1.length; i+=2)
+			if(buffer1[i].compareTo(buffer1[i-1]) < 0)
+				swap(buffer1, i, i-1);
+	}
+	
+	private final void sort() {
 		final int max = buffer1.length*2-1;
 		flag = true;
 		int l,c,r;
-		for(int i=2; i<max; i*=2) {
+		
+		prepare();
+		
+		for(int i=4; i<max; i*=2) {
 			l = 0;
 			r = i-1;
 			c = r / 2;
@@ -74,8 +87,10 @@ public final class SaidSort<T extends Comparable<T>> extends Sort<T> {
 				r = buffer1.length-1;
 				merge(l, c, r);
 			} else
-				while(l < buffer1.length)
+				while(l < buffer1.length) {
+					flag = false;
 					buffer2[l] = buffer1[l++];
+				}
 			if(flag)
 				return;
 			swapBuffers();
@@ -83,25 +98,18 @@ public final class SaidSort<T extends Comparable<T>> extends Sort<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T[] loudSort(final T[] input) {
-		if(input == null)
-			return input;
-		buffer1 = input;
-		buffer2 = new Comparable[input.length];
-		sort();
-		return (T[]) buffer1;
-	}
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public void sort(final T[] input) {
+	public final void sort(final T[] input) {
 		if(input == null)
 			return;
 		buffer1 = input;
 		buffer2 = new Comparable[input.length];
 		sort();
-		if (buffer1 != input)
+		if (buffer1 != input) {
+			if(flag)
+				return;
 			for(int i=0;i<input.length;++i)
-				input[i] = (T) buffer1[i];
+					input[i] = (T) buffer1[i];
+		}
 	}
 }
