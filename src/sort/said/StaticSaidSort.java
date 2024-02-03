@@ -9,9 +9,6 @@ package sort.said;
  * It's ultra fast and runs in O(n log n) time and O(n) best time
  * and with a much smaller amount of needed swaps compared to all other known 
  * non-hybrid stable sorting algorithms.
- * 
- * When compared to quicksort the performance is slightly worse for
- * true randomized data and better when it's already slightly ordered.
  */
 
 import sort.Sort;
