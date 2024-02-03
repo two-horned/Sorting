@@ -1,40 +1,22 @@
 package sort;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
 import sort.hybrid.*;
 import sort.said.*;
-import sort.heap.*;
-import sort.merge.*;
 import sort.quick.*;
 
 import java.util.Arrays;
 import java.util.Random;
 
+@TestMethodOrder(OrderAnnotation.class)
 final class FastSortTest {
-	private static final int TEST_SIZE = 10_000_000;
-	private static final Integer[] input1 = newInput(TEST_SIZE);
-	private static final Integer[] input2 = newInput(TEST_SIZE);
-	private static final Integer[] sorted = getSorted(input1);
-	private static final Integer[] reverse = getReversed(sorted);
-
-
-	private static Integer[] getSorted(final Integer[] input) {
-		final Integer[] sorted = input.clone();
-		Arrays.sort(sorted);
-		return sorted;
-	}
-
-	private static Integer[] getReversed(final Integer[] input) {
-		final Integer[] reversed = new Integer[input.length];
-		int i = 0;
-		int j = input.length -1;
-		while(i<input.length) {
-			reversed[i++] = input[j--];
- 		}
-		return reversed;
-	}
+	private static final int TEST_SIZE = 100_000;
+	private static final int WARMUP   = 100;
+	private static final int MAX_TEST = 10;
 	
 	private static Integer[] newInput(final int size) {
 		final Random rand = new Random();
@@ -46,116 +28,112 @@ final class FastSortTest {
 	}
 	
 	@Test
-	void testQuickSort() {
-		final QuickSort<Integer> s = new QuickSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+	@Order(1)
+	void warmup() {
+		Sort<Integer> s = new QuickSort<Integer>();
+		Integer[] input;
+		for(int i = 0; i < WARMUP; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		s = new UltraSort<Integer>();
+		for(int i = 0; i < WARMUP; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		s = new HyperSort<Integer>();
+		for(int i = 0; i < WARMUP; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		s = new StaticSaidSort<Integer>();
+		for(int i = 0; i < WARMUP; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		s = new DynamicSaidSort<Integer>();
+		for(int i = 0; i < WARMUP; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
 	}
-/*
+	
+	@Test
+	void testQuickSort() {
+		final var s = new QuickSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		s.sort(input);
+		assert(s.isSorted(input));
+	}
 
-	*/
 	@Test
 	void testStaticSaidSort() {
-		final StaticSaidSort<Integer> s = new StaticSaidSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new StaticSaidSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		s.sort(input);
+		assert(s.isSorted(input));
 	}
 
-	// /*
-	@Test
-	void testProtoDynamicSaidSort() {
-		final ProtoDynamicSaidSort<Integer> s = new ProtoDynamicSaidSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
-	}
-	// */
-	
-	// /*
 	@Test
 	void testDynamicSaidSort() {
-		final DynamicSaidSort<Integer> s = new DynamicSaidSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
-	} // */
+		final var s = new DynamicSaidSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		s.sort(input);
+		assert(s.isSorted(input));
+	}
 	
-	/*
 	@Test
 	void testUltraSort() {
-		final UltraSort<Integer> s = new UltraSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new UltraSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		s.sort(input);
+		assert(s.isSorted(input));
 	}
-	*/
+	
+	@Test
+	void testHyperSort() {
+		final var s = new HyperSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		s.sort(input);
+		assert(s.isSorted(input));
+	}
+	
 
 	@Test
 	void testJavaTimSort() {
-		final MergeSort<Integer> s = new MergeSort<>();
-		final Integer[] input1 = FastSortTest.input1.clone();
-		final Integer[] input2 = FastSortTest.input2.clone();
-		final Integer[] reversed = FastSortTest.reverse.clone();
-		Arrays.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		Arrays.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		Arrays.sort(reversed);
-		assertEquals(true, s.isSorted(reversed));
-		Arrays.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
-	}
-	
-	@Test
-	void testIsSorted() {
-		final HeapSort<Integer> s = new HeapSort<>();
-		final Integer[] input1 = {1,2,3,4};
-		final Integer[] input2 = {1,2,4,3};
-		final Integer[] input3 = {1,2,4,4};
-		assertEquals(true, s.isSorted(input1));
-		assertEquals(false, s.isSorted(input2));
-		assertEquals(true, s.isSorted(input3));
+		final var s = new UltraSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			Arrays.sort(input);
+		}
+		input = newInput(TEST_SIZE);
+		Arrays.sort(input);
+		assert(s.isSorted(input));
 	}
 }

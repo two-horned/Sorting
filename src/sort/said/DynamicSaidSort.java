@@ -12,14 +12,15 @@ package sort.said;
 
 import sort.helper.Merger;
 import sort.helper.Queue;
-
 import sort.Sort;
 
 public final class DynamicSaidSort<T extends Comparable<T>> extends Sort<T> {
-	Merger<T> merger = new Merger<>();
+	private final Merger<T> m = new Merger<>();
 	private T[] buffer1;
 	private T[] buffer2;
 	private Queue<Integer> queue;
+	private int added;
+	private int size;
 
 	private final void swapBuffers() {
 		T[] temp = buffer1;
@@ -27,85 +28,106 @@ public final class DynamicSaidSort<T extends Comparable<T>> extends Sort<T> {
 		buffer2 = temp;
 	}
 
+	private final int advance(int from) {
+		while (0 < added) {
+			if (buffer1[from + 1].compareTo(buffer1[from]) < 0)
+				break;
+			from = queue.uncheckedRemove();
+			--added;
+		}
+		return from;
+	}
+
 	private final void prepare() {
+		buffer2[size - 1] = buffer1[size - 1];
+		added = 0;
 		int mode;
 		int l, c, r;
 		l = 0;
-		c = 0;
-		while (++c < buffer1.length) {
+		c = 1;
+		while (c < size) {
 			mode = 0;
 			if (buffer1[c].compareTo(buffer1[c - 1]) < 0) {
-				c = merger.modeB(buffer1, c);
-				++mode;
-				if (buffer1.length - 2 < c) {
-					merger.reverse(buffer1, buffer2, l, c);
-					return;
+				c = m.modeB(buffer1, c);
+				if (c == size - 1) {
+					m.reverse(buffer1, buffer2, l, c);
+					break;
 				}
+				++mode;
 			} else {
-				c = merger.modeS(buffer1, c);
-				if (buffer1.length - 2 < c)
-					return;
+				c = m.modeS(buffer1, c);
+				if (c == size - 1) {
+					System.arraycopy(buffer1, l, buffer2, l, size - l);
+					break;
+				}
 			}
 
 			r = c + 1;
-			if (r < buffer1.length - 1) {
+			if (r < size - 1) {
 				if (buffer1[r + 1].compareTo(buffer1[r]) < 0) {
-					r = merger.modeB(buffer1, r);
 					mode += 2;
+					r = m.modeB(buffer1, r);
 				} else
-					r = merger.modeS(buffer1, r);
+					r = m.modeS(buffer1, r);
+				if (r < size - 1) {
+					queue.uncheckedAdd(r);
+					++added;
+				}
 			}
-			if (r < buffer1.length - 1)
-				queue.uncheckedAdd(r);
-			merger.dynMerge(buffer1, buffer2, mode, l, c, r);
+			m.dynMerge(buffer1, buffer2, mode, l, c, r);
 			l = r + 1;
-			c = l;
+			c = l + 1;
 		}
+		swapBuffers();
+		return;
 	}
 
 	private final void sort() {
 		prepare();
+		int nadd;
 		int l, c, r;
-		while (!queue.isEmpty()) {
-			swapBuffers();
+		while (0 < added) {
+			nadd = 0;
 			l = 0;
-			while (!queue.isEmpty() && l < queue.head()) {
+			while (0 < added) {
+				--added;
 				c = queue.uncheckedRemove();
-				while (!queue.isEmpty() && c < queue.head()) {
-					if (buffer1[c + 1].compareTo(buffer1[c]) < 0)
-						break;
-					c = queue.uncheckedRemove();
-				}
+				c = advance(c);
 
-				if (!queue.isEmpty() && c < queue.head()) {
+				if (0 < added) {
 					r = queue.uncheckedRemove();
+					--added;
+					r = advance(r);
 					queue.uncheckedAdd(r);
+					++nadd;
 				} else
-					r = buffer1.length - 1;
-				
-				merger.mergeSS(buffer1, buffer2, l, c, r);
+					r = size - 1;
+
+				m.mergeSS(buffer1, buffer2, l, c, r);
 				l = r + 1;
 			}
-			while(l < buffer1.length)
-				buffer2[l] = buffer1[l++];
-
+			added += nadd;
+			if (l < size)
+				System.arraycopy(buffer1, l, buffer2, l, size - l);
+			swapBuffers();
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public final void sort(final T[] input) {
-		if (input == null)
+		if (input == null || input.length == 0)
 			return;
-		//System.out.println(java.util.Arrays.toString(input));
-		buffer1 = input.clone();
-		buffer2 = input;
+		size = input.length;
+		
+		buffer1 = input;
+		buffer2 = (T[]) new Comparable[size];
 
-		queue = new Queue<>(buffer1.length / 4 + 1);
+		queue = new Queue<>(size / 4 + 3);
 
 		sort();
-		
-		if(buffer2 != input)
-			for(int i=0; i<input.length;++i)
-					input[i] = buffer2[i];
+		if (buffer1 != input) {
+			System.arraycopy(buffer1, 0, buffer2, 0, size);
+		}
 	}
 }

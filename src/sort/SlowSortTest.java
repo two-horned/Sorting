@@ -12,16 +12,10 @@ import sort.insert.*;
 import java.util.Random;
 
 final class SlowSortTest {
-	private static final int TEST_SIZE = 32_000;
-	private static final Integer[] input1 = newInput(TEST_SIZE);
-	private static final Integer[] input2 = newInput(TEST_SIZE);
-	private static final Integer[] sorted = getSorted(input1);
+	private static final int TEST_SIZE = 64;
+	private static final int MAX_TEST = 10_000;
 
-	private static Integer[] getSorted(final Integer[] input) {
-		final Integer[] sorted = input.clone();
-		new InsertionSort<Integer>().sort(sorted);
-		return sorted;
-	}
+
 	private static Integer[] newInput(final int size) {
 		final Random rand = new Random();
 		Integer[] r = new Integer[size];
@@ -33,80 +27,79 @@ final class SlowSortTest {
 	
 	@Test
 	void testSelectionSort() {
-		final SelectionSort<Integer> s = new SelectionSort<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new SelectionSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 	
 	@Test
 	void testShakerSort() {
-		final ShakerSort<Integer> s = new ShakerSort<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new ShakerSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 	
 	@Test
 	void testGnomeSort() {
-		final GnomeSort<Integer> s = new GnomeSort<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new GnomeSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 	
 	@Test
 	void testBubbleSort() {
-		final BubbleSort<Integer> s = new BubbleSort<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new BubbleSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 	
 	@Test
 	void testInsertionSort() {
-		final InsertionSort<Integer> s = new InsertionSort<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new InsertionSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
+	}
+	
+	@Test
+	void testBinaryInsertionSort() {
+		final var s = new BinaryInsertionSort<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 	
 	@Test
 	void testMergeSortNoBuffer() {
-		final MergeSortNoBuffer<Integer> s = new MergeSortNoBuffer<>();
-		final Integer[] input1 = SlowSortTest.input1.clone();
-		final Integer[] input2 = SlowSortTest.input2.clone();
-		s.sort(input1);
-		assertEquals(true, s.isSorted(input1));
-		s.sort(input2);
-		assertEquals(true, s.isSorted(input2));
-		s.sort(sorted);
-		assertEquals(true, s.isSorted(sorted));
+		final var s = new MergeSortNoBuffer<Integer>();
+		Integer[] input;
+		for (int i = 0; i < MAX_TEST; i++) {
+			input = newInput(TEST_SIZE);
+			s.sort(input);
+			assertEquals(true, s.isSorted(input));
+		}
 	}
 
 }

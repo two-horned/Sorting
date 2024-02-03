@@ -3,7 +3,7 @@
  */
 
 package sort.said;
-import sort.Sort;
+
 /*
  * This stable sorting algorithm has been developed by myself.
  * It's ultra fast and runs in O(n log n) time and O(n) best time
@@ -14,102 +14,67 @@ import sort.Sort;
  * true randomized data and better when it's already slightly ordered.
  */
 
+import sort.Sort;
+import sort.helper.Merger;
+
 public final class StaticSaidSort<T extends Comparable<T>> extends Sort<T> {
-	@SuppressWarnings("rawtypes")
-	private Comparable[] buffer1;
-	@SuppressWarnings("rawtypes")
-	private Comparable[] buffer2;
-	boolean flag;
-	
-	@SuppressWarnings("unchecked")
-	private final void merge(
-			final int left,
-			final int center,
-			final int right
-			) {
-		int l = left;
-		int r = center + 1;
-		int i = left;
-		while(i<right+1) {
-			if(buffer1[r].compareTo(buffer1[l]) < 0) {
-				buffer2[i] = buffer1[r++];
-				flag = false;
-			}
-			else
-				buffer2[i] = buffer1[l++];
-			i++;
-			
-			if(right<r) {
-				while(l<center+1)
-					buffer2[i++] = buffer1[l++];
-				break;
-			}
-			if(center<l) {
-				while(r<right+1)
-					buffer2[i++] = buffer1[r++];
-				break;
-			}
-		}
-	}
-	
+	Merger<T> m = new Merger<>();
+	private T[] buffer1;
+	private T[] buffer2;
+
+	int size;
+
 	private final void swapBuffers() {
-		@SuppressWarnings("rawtypes")
-		Comparable[] temp = buffer1;
+		T[] temp = buffer1;
 		buffer1 = buffer2;
 		buffer2 = temp;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	private final void prepare() {
-		for(int i=1; i<buffer1.length; i+=2)
-			if(buffer1[i].compareTo(buffer1[i-1]) < 0)
-				swap(buffer1, i, i-1);
+		for (int i = 1; i < size; i += 2)
+			if (buffer1[i].compareTo(buffer1[i - 1]) < 0)
+				swap(buffer1, i, i - 1);
 	}
-	
+
 	private final void sort() {
-		final int max = buffer1.length*2-1;
-		flag = true;
-		int l,c,r;
-		
 		prepare();
-		
-		for(int i=4; i<max; i*=2) {
+		final int max = size - 1;
+		int l, c, r;
+
+		for (int jump = 2; jump < max; jump = jump << 1) {
 			l = 0;
-			r = i-1;
-			c = r / 2;
-			while(r < buffer1.length) {
-				merge(l, c, r);
-				l += i;
-				r += i;
-				c += i;
+			c = l + jump - 1;
+			r = c + jump;
+			while (r + jump + 1 < size) {
+				m.mergeSS(buffer1, buffer2, l, c, r);
+				l = r + 1;
+				c = r + jump;
+				r = c + jump;
 			}
-			if (c < buffer1.length-1) {
-				r = buffer1.length-1;
-				merge(l, c, r);
-			} else
-				while(l < buffer1.length) {
-					flag = false;
-					buffer2[l] = buffer1[l++];
-				}
-			if(flag)
-				return;
+			
+			if (size - 1 <= r)
+				m.mergeSS(buffer1, buffer2, l, c, size - 1);
+			else
+				m.mergeSSS(buffer1, buffer2, l, c, r, size - 1);
+			
 			swapBuffers();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public final void sort(final T[] input) {
-		if(input == null)
+		if (input == null)
 			return;
+
+		size = input.length;
+
 		buffer1 = input;
-		buffer2 = new Comparable[input.length];
+		buffer2 = (T[]) new Comparable[size];
 		sort();
+
 		if (buffer1 != input) {
-			if(flag)
-				return;
-			for(int i=0;i<input.length;++i)
-					input[i] = (T) buffer1[i];
+			System.arraycopy(buffer1, 0, buffer2, 0, size);
 		}
 	}
 }
